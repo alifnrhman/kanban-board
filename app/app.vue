@@ -101,7 +101,8 @@ const addTask = (boardId: number) => {
 					item-key="id"
 					tag="ul"
 					group="boards"
-					class="flex flex-col gap-3">
+					class="flex flex-col gap-3"
+					ghost-class="drop-target">
 					<template #item="{ element }">
 						<li
 							class="p-4 border border-neutral-200 rounded cursor-pointer select-none hover:border-neutral-400 transition-all duration-200"
