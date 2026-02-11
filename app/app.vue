@@ -51,6 +51,14 @@ watch(
 	{ deep: true },
 );
 
+// Load the state from localStorage on component mount
+onMounted(() => {
+	const savedBoards = localStorage.getItem("boards");
+	if (savedBoards) {
+		boards.value = JSON.parse(savedBoards);
+	}
+});
+
 const filteredBoards = computed(() => {
 	if (value.value === "All Users") {
 		return boards.value;
@@ -107,12 +115,19 @@ const addTask = (boardId: number) => {
 						<li
 							class="p-4 border border-neutral-200 rounded cursor-pointer select-none hover:border-neutral-400 transition-all duration-200"
 							:name="element.title">
-							<div class="flex flex-col gap-2">
-								<h3 class="font-medium">{{ element.title }}</h3>
-								<p class="text-sm text-neutral-600">{{ element.description }}</p>
-								<p class="text-sm text-neutral-600 text-right">
-									Assigned to: <span class="font-semibold">{{ element.assignedTo }}</span>
-								</p>
+							<div class="flex items-start gap-3 group">
+								<UCheckbox
+									v-model="element.isComplete"
+									icon="line-md:confirm-circle-twotone"
+									:class="element.isComplete ? 'block' : 'group-hover:block hidden'"
+									:ui="{ base: 'rounded-full border-slate-300 text-emerald-600 focus:ring-emerald-500/40 size-6 mt-4 cursor-pointer' }" />
+								<div class="flex flex-col flex-1 gap-1">
+									<h3 class="font-medium">{{ element.title }}</h3>
+									<p class="text-sm text-neutral-600">{{ element.description }}</p>
+									<p class="text-sm text-neutral-600 text-right">
+										Assigned to: <span class="font-semibold">{{ element.assignedTo }}</span>
+									</p>
+								</div>
 							</div>
 						</li>
 					</template>
@@ -120,7 +135,8 @@ const addTask = (boardId: number) => {
 						<UButton
 							@click="addTask(board.id)"
 							block
-							variant="outline">
+							variant="outline"
+							:ui="{ base: 'cursor-pointer' }">
 							+ Add Task
 						</UButton>
 					</template>
